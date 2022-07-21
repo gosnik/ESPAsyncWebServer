@@ -224,7 +224,11 @@ bool AsyncWebSocketMessageBuffer::reserve(size_t size)
 
 }
 
-
+void AsyncWebSocketMessageBuffer::set(uint8_t * data, size_t size)
+{
+  _data = data;
+  _len = size;
+}
 
 /*
  * Control Frame

@@ -24,7 +24,7 @@
 #include <Arduino.h>
 #ifdef ESP32
 #include <AsyncTCP.h>
-#define WS_MAX_QUEUED_MESSAGES 32
+#define WS_MAX_QUEUED_MESSAGES 64
 #else
 #include <ESPAsyncTCP.h>
 #define WS_MAX_QUEUED_MESSAGES 8
@@ -84,8 +84,8 @@ class AsyncWebSocketMessageBuffer {
   private:
     uint8_t * _data;
     size_t _len;
-    bool _lock; 
-    uint32_t _count;  
+    volatile bool _lock; 
+    volatile uint32_t _count;  
 
   public:
     AsyncWebSocketMessageBuffer();
@@ -103,6 +103,7 @@ class AsyncWebSocketMessageBuffer {
     size_t length() { return _len; }
     uint32_t count() { return _count; }
     bool canDelete() { return (!_count && !_lock); } 
+    void set(uint8_t * data, size_t size);
 
     friend AsyncWebSocket; 
 
